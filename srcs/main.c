@@ -6,11 +6,24 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/12 12:00:56 by ltran            ###   ########.fr       */
+/*   Updated: 2017/09/21 18:28:26 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+/*
+ fleche haut 27 91 65
+ fleche bas 27 91 66
+ fleche droite 27 91 67
+ fleche gauche 27 91 68
+ espace 32 91 67
+ return (enter) 10 91 67
+ echap 27 -85 -5
+ delete 127 91 67
+ ctrl+z 26 91 67
+*/
 #include "../select.h"
+#include <curses.h>
+#include <term.h>
 
 int		set_up_term()
 {
@@ -58,22 +71,32 @@ int     voir_touche()
 	char     buffer[3];
 
 	read(0, buffer, 3);
-	printf("C'est une fleche %d %d %d !\n", buffer[0], buffer[1], buffer[2]);
+	printf("C'est une touche %d %d %d !\n", buffer[0], buffer[1], buffer[2]);
+	if (buffer[0] == 27 && buffer[1] == 91)
+		return (27);
 	if (buffer[0] == 4)
 	{
 		printf("Ctlr+d, on quitte !\n");
-		return (1);
+		return (-1);
 	}
 	return (0);
 }
 
 int              main(void)
 {
+	int		nb_c;
+	int		nb_l;
 
 	set_up_term();
-	while (voir_touche() == 0)
+	while (42)
 	{
-		;
+		term_mouv();
+		if (voir_touche() == -1)
+			return (0);
+		set_up_term();
+		nb_l = tgetnum ("li");
+		nb_c = tgetnum ("co");
+		printf("co: %i && li: %i\n", nb_c, nb_l);
 	}
 	return (0);
 }
