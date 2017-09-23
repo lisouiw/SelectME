@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/21 18:28:26 by ltran            ###   ########.fr       */
+/*   Updated: 2017/09/23 18:32:48 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,28 +77,70 @@ int     voir_touche()
 	if (buffer[0] == 4)
 	{
 		printf("Ctlr+d, on quitte !\n");
-		return (-1);
+		exit(0);
 	}
 	return (0);
 }
 
+/*
 int              main(void)
 {
-	int		nb_c;
-	int		nb_l;
+	extern char PC;
+	extern char * UP;
+	extern char * BC;
+//	int		nb_c;
+//	int		nb_l;
+	char    *res;
 
 	set_up_term();
 	while (42)
 	{
-		term_mouv();
-		if (voir_touche() == -1)
-			return (0);
-		set_up_term();
-		nb_l = tgetnum ("li");
-		nb_c = tgetnum ("co");
-		printf("co: %i && li: %i\n", nb_c, nb_l);
+		if ((res = tgetstr("mr", NULL)) == NULL)
+			return (-1);
+		tputs(tgoto(res, -1, -1), 1, putchar);
+		ft_putendl("PUTE");
+		if ((res = tgetstr("me", NULL)) == NULL)
+			return (-1);
+
+		voir_touche();
+		tputs(tgoto(res, 0, 1), 1, putchar);
+//		printf("co: %i && li: %i\n", nb_c, nb_l);
 	}
 	return (0);
+}*/
+
+t_lst	*add_ls(char *str, t_lst *new, t_lst *ls)
+{
+	t_lst		*tmp;
+
+	tmp = ls;
+	new = (t_lst*)malloc(sizeof(t_lst));
+	new->select = ft_strdup(str);
+	new->next = NULL;
+	if (ls == NULL)
+		return (new);
+	while (tmp->next != NULL)
+		tmp = tmp->next;
+	tmp->next = new;
+	return (ls);
 }
 
+t_lst	*giv_lst(char **ag, t_lst *ls)
+{
+	int		i;
+
+	i = 0;
+	while (ag[++i])
+		ls = add_ls(ag[i], NULL, ls);
+	return (ls);
+}
+
+int		main(int ac, char **ag)
+{
+	t_lst	*ls;
+
+	ac = 0;
+	ls = giv_lst(ag, NULL);
+	return (0);
+}
 

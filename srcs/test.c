@@ -6,24 +6,36 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/21 16:49:24 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/21 17:02:56 by ltran            ###   ########.fr       */
+/*   Updated: 2017/09/23 16:32:25 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
-#include <curses.h>
-#include <term.h>
 
-int		main(void)
+#include <stdio.h>
+#include <stdlib.h>
+#include <termcap.h>
+
+int main()
 {
-	int		nb_c;
-	int		nb_l;
+	char buf[1024];
+	char buf2[30];
+	char *ap = buf2;
+	char *clearstr, *gotostr, *standstr, *stendstr;
 
-	while (42)
-	{
-		nb_c = tgetnum ("li");
-		nb_l = tgetnum ("co");
-		printf("co: %i && li: %i\n", nb_c, nb_l);
-	}
+	tgetent(buf, getenv("TERM"));
+
+	clearstr = tgetstr("cl", &ap);
+	gotostr = tgetstr("cm", &ap);
+	standstr = tgetstr("so", &ap);
+	stendstr = tgetstr("se", &ap);
+
+	fputs(clearstr, stdout);
+//	tputs(tgoto(gotostr, 20, 10), 1, ft_putchar);
+//	printf("Hello, ");
+	fputs(standstr, stdout);
+	printf("world");
+//	fputs(stendstr, stdout);
+//	putchar('!');
 	return (0);
 }
