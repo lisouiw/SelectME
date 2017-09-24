@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/24 18:04:42 by ltran            ###   ########.fr       */
+/*   Updated: 2017/09/24 15:47:28 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,62 +152,50 @@ t_lst	*giv_lst(char **ag, t_lst *ls)
 	return (ls);
 }
 
-int     my_puts(const char *s)
-{
-	while (*s != '\0')
-		write(1, s++, 1);
-	write(1, "\n", 1);
-	return (1);
-}
-
-void	test(t_lst *ls)
+void	test()
 {
 	char buf[1024];
 	char buf2[30];
 	char *ap = buf2;
-	char *clear, *cm_p, *vd, *vid, *un, *und;
+	char *clear, *cm_p, *stand, *stend;
 
 	tgetent(buf, getenv("TERM"));
 
 	clear = tgetstr("cl", &ap);
 	cm_p = tgetstr("cm", &ap);
-	vd = tgetstr("so", &ap);
-	vid = tgetstr("se", &ap);
-	un = tgetstr("us", &ap);
-	und = tgetstr("ue", &ap);
+	stand = tgetstr("so", &ap);
+	stend = tgetstr("se", &ap);
 
-	while (ls != NULL)
-	{
-		un = tgetstr("us", &ap);
-		und = tgetstr("ue", &ap);
-		tputs(vd, 1, putchar);
-			printf("%s\n", ls->select);
-		tputs(vid, 1, putchar);
-	tputs(un, 1, putchar);
-		tputs(und, 1, putchar);
-
-		ls = ls->next;
-	}
-	putchar('!');
+	fputs(clearstr, stdout);
+	fputs(tgoto(gotostr, 0, 0), stdout);
+	printf("Hello, ");
+	//fputs(standstr, stdout);
+//	printf("world");
+//	fputs(stendstr, stdout);
+//	putchar('!');
 }
 
 int		main(int ac, char **ag)
 {
 	t_lst	*ls;
 	char  *clstr;
-//	char  *cmstr;
+	char  *cmstr;
 
 	set_up_term();
+//	term_mouv();
+	cmstr = tgetstr("hd", NULL);
 	clstr = tgetstr("cl", NULL);
 //	tputs(clstr, 1, putchar);
 	ac = 0;
 	ls = giv_lst(ag, NULL);
-
-	test(ls);
+	while (ls != NULL)
+	{
+		ft_putendl(ls->select);
+		ls = ls->next;
+	}
+	tputs(tgoto(cmstr, 1, 1), 1, putchar);
+	test();
 	term_init();
-//	term_mouv();
-	while (42)
-		;
 	while (voir_touche())
 		;
 	return (0);
