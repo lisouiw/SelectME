@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/24 18:04:42 by ltran            ###   ########.fr       */
+/*   Updated: 2017/09/25 17:55:32 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int     voir_touche()
 	if (buffer[0] == 4)
 	{
 		printf("Ctlr+d, on quitte !\n");
+		return(-1);
 		exit(0);
 	}
 	return (0);
@@ -126,13 +127,15 @@ int              main(void)
 	return (0);
 }*/
 
-t_lst	*add_ls(char *str, t_lst *new, t_lst *ls)
+t_lst	*add_ls(char *str, t_lst *new, t_lst *ls, int max)
 {
 	t_lst		*tmp;
 
 	tmp = ls;
 	new = (t_lst*)malloc(sizeof(t_lst));
 	new->select = ft_strdup(str);
+//	new->max = (int)malloc(sizeof(int)*max);
+	new->max = max;
 	new->next = NULL;
 	if (ls == NULL)
 		return (new);
@@ -145,71 +148,83 @@ t_lst	*add_ls(char *str, t_lst *new, t_lst *ls)
 t_lst	*giv_lst(char **ag, t_lst *ls)
 {
 	int		i;
+	int		max;
+	int		tmp;
 
 	i = 0;
+	max = 0;
+	while (ag[++i] && (tmp = ft_strlen(ag[i])))
+		max = (max < tmp) ? tmp : max;
+	i = 0;
 	while (ag[++i])
-		ls = add_ls(ag[i], NULL, ls);
+		ls = add_ls(ag[i], NULL, ls, max + 2);
 	return (ls);
 }
 
-int     my_puts(const char *s)
+int		my_put(int c);
+
+int		my_put(int c)
 {
-	while (*s != '\0')
-		write(1, s++, 1);
-	write(1, "\n", 1);
-	return (1);
+	ft_putchar_fd(c, 1);
+	return (c);
 }
 
-void	test(t_lst *ls)
+void	test(t_lst *ls, int co)
 {
-	char buf[1024];
 	char buf2[30];
 	char *ap = buf2;
-	char *clear, *cm_p, *vd, *vid, *un, *und;
+	char *cm;
+	int		i;
+	int		l;
+	int		bis;
 
-	tgetent(buf, getenv("TERM"));
-
-	clear = tgetstr("cl", &ap);
-	cm_p = tgetstr("cm", &ap);
-	vd = tgetstr("so", &ap);
-	vid = tgetstr("se", &ap);
-	un = tgetstr("us", &ap);
-	und = tgetstr("ue", &ap);
-
+	l = -1;
 	while (ls != NULL)
 	{
-		un = tgetstr("us", &ap);
-		und = tgetstr("ue", &ap);
-		tputs(vd, 1, putchar);
-			printf("%s\n", ls->select);
-		tputs(vid, 1, putchar);
-	tputs(un, 1, putchar);
-		tputs(und, 1, putchar);
-
-		ls = ls->next;
+		i = 0;
+		bis = co;
+		l += 3 ;
+		while (ls != NULL && --bis > 0 )
+		{
+			cm = tgetstr("cm", &ap);
+			tputs(tgoto(cm, i, l), 1, putchar);
+		//	printf("%s\n", ls->select);
+			ft_putstr_fd(ls->select, 1);
+			i += ls->max;
+			tputs(tgoto(cm, i, l), 1, putchar);
+			ls = ls->next;
+		}
 	}
-	putchar('!');
+
+//	tputs(tgoto(cm, 10, 6), 1, putchar);
+//	}
+
 }
 
 int		main(int ac, char **ag)
 {
 	t_lst	*ls;
-	char  *clstr;
+//	char  *clstr;
 //	char  *cmstr;
+	int		co;
+	int		li;
 
 	set_up_term();
-	clstr = tgetstr("cl", NULL);
+//	clstr = tgetstr("cl", NULL);
 //	tputs(clstr, 1, putchar);
 	ac = 0;
 	ls = giv_lst(ag, NULL);
 
-	test(ls);
+	co = tgetnum("co");
+	li = tgetnum("li");
+//	printf("co %i && li %i\n", co, li);
+	test(ls, ((co - (co % ls->max))/ ls->max));
+//	while (voir_touche() != -1)
+	exit(0);
+	term_mouv();
+	sleep(5);
 	term_init();
-//	term_mouv();
-	while (42)
-		;
-	while (voir_touche())
-		;
+
 	return (0);
 }
 
