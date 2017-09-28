@@ -1,35 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   select.h                                           :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/28 18:10:53 by ltran            ###   ########.fr       */
+/*   Created: 2017/09/28 15:11:21 by ltran             #+#    #+#             */
+/*   Updated: 2017/09/28 17:23:47 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SELECT_H
-# define SELECT_H
+#include "../select.h"
 
-# include <unistd.h>
-# include <stdio.h>
-# include "libft/libft.h"
-# include <termios.h>
-# include <term.h>
-#include <curses.h>
-#include <termcap.h>
-#include <termios.h>
+void sighandler(int);
 
-typedef struct		s_lst
+int main()
 {
-	char			*select;
-	int				max;
-	struct s_lst	*next;
-}					t_lst;
+	signal(SIGINT, sighandler);
+	signal(SIGTSTP, sighandler);
+	signal(SIGQUIT, sighandler);
+	while(1)
+	{
+		printf("Going to sleep for a second...\n");
+		sleep(1);
+	}
+	return(0);
+}
 
-t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls);
-t_lst	*giv_ls(char **ag, t_lst *ls);
-
-#endif
+void sighandler(int signum)
+{
+	printf("Caught signal %d, coming out...\n", signum);
+	exit(signum);
+}

@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/25 17:55:32 by ltran            ###   ########.fr       */
+/*   Updated: 2017/09/28 18:31:35 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		set_up_term()
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
 	term.c_cc[VSUSP] = ISIG;
-	if (tcsetattr(0, TCSADRAIN, &term) == -1)
+	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (0);
 }
@@ -61,23 +61,6 @@ int		term_mouv()
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
 	term.c_cc[VSUSP] = ISIG;
-	if (tcsetattr(0, TCSADRAIN, &term) == -1)
-		return (-1);
-	return (0);
-}
-int		term_init()
-{
-	char           *name_term;
-	struct termios term;
-
-	if ((name_term = getenv("TERM")) == NULL)
-		return (-1);
-	if (tgetent(NULL, name_term) == ERR)
-		return (-1);
-	if (tcgetattr(0, &term) == -1)
-		return (-1);
-	term.c_lflag &= ~(ICANON);
-	term.c_lflag &= ~(ECHO);
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (0);
@@ -89,12 +72,9 @@ int     voir_touche()
 
 	read(0, buffer, 3);
 	printf("C'est une touche %d %d %d !\n", buffer[0], buffer[1], buffer[2]);
-	if (buffer[0] == 27 && buffer[1] == 91)
-		return (27);
 	if (buffer[0] == 4)
 	{
 		printf("Ctlr+d, on quitte !\n");
-		return(-1);
 		exit(0);
 	}
 	return (0);
@@ -127,104 +107,47 @@ int              main(void)
 	return (0);
 }*/
 
-t_lst	*add_ls(char *str, t_lst *new, t_lst *ls, int max)
-{
-	t_lst		*tmp;
 
-	tmp = ls;
-	new = (t_lst*)malloc(sizeof(t_lst));
-	new->select = ft_strdup(str);
-//	new->max = (int)malloc(sizeof(int)*max);
-	new->max = max;
-	new->next = NULL;
-	if (ls == NULL)
-		return (new);
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	tmp->next = new;
-	return (ls);
+void	test(t_lst *ls)
+{
+
+	set_up_term();
+	ft_putstr_fd(tgetstr("cl", NULL), 1);
+	ft_putstr_fd(tgetstr("us", NULL),1);
+	ft_putendl_fd(ls->select,0);
+	ft_putstr_fd(tgetstr("ue", NULL),1);
+	ls = ls->next;
+	ft_putendl_fd(ls->select,1);
+	ft_putstr_fd(tgoto(tgetstr("cm", NULL),0,0),1);
+	return;
 }
 
-t_lst	*giv_lst(char **ag, t_lst *ls)
-{
-	int		i;
-	int		max;
-	int		tmp;
-
-	i = 0;
-	max = 0;
-	while (ag[++i] && (tmp = ft_strlen(ag[i])))
-		max = (max < tmp) ? tmp : max;
-	i = 0;
-	while (ag[++i])
-		ls = add_ls(ag[i], NULL, ls, max + 2);
-	return (ls);
-}
-
-int		my_put(int c);
-
-int		my_put(int c)
-{
-	ft_putchar_fd(c, 1);
-	return (c);
-}
-
-void	test(t_lst *ls, int co)
-{
-	char buf2[30];
-	char *ap = buf2;
-	char *cm;
-	int		i;
-	int		l;
-	int		bis;
-
-	l = -1;
-	while (ls != NULL)
-	{
-		i = 0;
-		bis = co;
-		l += 3 ;
-		while (ls != NULL && --bis > 0 )
-		{
-			cm = tgetstr("cm", &ap);
-			tputs(tgoto(cm, i, l), 1, putchar);
-		//	printf("%s\n", ls->select);
-			ft_putstr_fd(ls->select, 1);
-			i += ls->max;
-			tputs(tgoto(cm, i, l), 1, putchar);
-			ls = ls->next;
-		}
-	}
-
-//	tputs(tgoto(cm, 10, 6), 1, putchar);
-//	}
-
-}
 
 int		main(int ac, char **ag)
 {
 	t_lst	*ls;
 //	char  *clstr;
 //	char  *cmstr;
-	int		co;
-	int		li;
+//	int		co;
+//	int		li;
 
-	set_up_term();
+	ac = 0;
 //	clstr = tgetstr("cl", NULL);
 //	tputs(clstr, 1, putchar);
-	ac = 0;
-	ls = giv_lst(ag, NULL);
+//	ac = 0;
+	ls = giv_ls(ag, NULL);
+	test(ls);
 
-	co = tgetnum("co");
-	li = tgetnum("li");
+//	co = tgetnum("co");
+//	li = tgetnum("li");
 //	printf("co %i && li %i\n", co, li);
-	test(ls, ((co - (co % ls->max))/ ls->max));
-//	while (voir_touche() != -1)
-	exit(0);
-	term_mouv();
+	while (1)
+		;
+	//	voir_touche();
+/*	term_mouv();
 	sleep(5);
-	term_init();
 
+*/
 	return (0);
 }
 
