@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/28 18:31:35 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/15 18:29:41 by gostimacbook     ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #include "../select.h"
 #include <curses.h>
 #include <term.h>
+#include <stdio.h>
 
 int		set_up_term()
 {
@@ -45,7 +46,7 @@ int		set_up_term()
 		return (-1);
 	return (0);
 }
-
+/*
 int		term_mouv()
 {
 	char           *name_term;
@@ -64,7 +65,7 @@ int		term_mouv()
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (0);
-}
+}*/
 
 int     voir_touche()
 {
@@ -80,74 +81,67 @@ int     voir_touche()
 	return (0);
 }
 
-/*
-int              main(void)
-{
-	extern char PC;
-	extern char * UP;
-	extern char * BC;
-//	int		nb_c;
-//	int		nb_l;
-	char    *res;
-
-	set_up_term();
-	while (42)
-	{
-		if ((res = tgetstr("mr", NULL)) == NULL)
-			return (-1);
-		tputs(tgoto(res, -1, -1), 1, putchar);
-		ft_putendl("PUTE");
-		if ((res = tgetstr("me", NULL)) == NULL)
-			return (-1);
-
-		voir_touche();
-		tputs(tgoto(res, 0, 1), 1, putchar);
-//		printf("co: %i && li: %i\n", nb_c, nb_l);
-	}
-	return (0);
-}*/
-
-
 void	test(t_lst *ls)
 {
-
-	set_up_term();
 	ft_putstr_fd(tgetstr("cl", NULL), 1);
 	ft_putstr_fd(tgetstr("us", NULL),1);
 	ft_putendl_fd(ls->select,0);
 	ft_putstr_fd(tgetstr("ue", NULL),1);
 	ls = ls->next;
 	ft_putendl_fd(ls->select,1);
-	ft_putstr_fd(tgoto(tgetstr("cm", NULL),0,0),1);
+//	ft_putstr_fd(tgoto(tgetstr("cm", NULL),0,0),1);
 	return;
+}
+
+int	ft_put(int c)
+{
+	write(1, &c, 1);
+
+	return(1);
+}
+
+
+void	my_list(t_lst *ls)
+{
+	int ver;
+	int i;
+	int x;
+	char *got;
+
+	x = 0;
+	got = tgetstr("cm", NULL);
+	tputs(tgetstr("cl", NULL), 1, ft_put);
+	tputs(tgoto(got, x, 0),1,ft_put);
+		
+	ver = tgetnum("li");
+	while (ls != NULL)
+	{
+		i = 0;
+		tputs(tgoto(got, x, i),1,ft_put);
+		while ( ls != NULL && i < ver -1 )
+		{
+			tputs(ls->select, 1, ft_put);
+			ft_putstr_fd("\n",1);
+			ls = ls->next;
+			tputs(tgoto(got, x, i+1),1,ft_put);
+			++i;
+		}
+		x = x + 10;
+	}
 }
 
 
 int		main(int ac, char **ag)
 {
 	t_lst	*ls;
-//	char  *clstr;
-//	char  *cmstr;
-//	int		co;
-//	int		li;
 
 	ac = 0;
-//	clstr = tgetstr("cl", NULL);
-//	tputs(clstr, 1, putchar);
-//	ac = 0;
 	ls = giv_ls(ag, NULL);
-	test(ls);
-
-//	co = tgetnum("co");
-//	li = tgetnum("li");
-//	printf("co %i && li %i\n", co, li);
+	set_up_term();
+	my_list(ls);
+	
 	while (1)
 		;
-	//	voir_touche();
-/*	term_mouv();
-	sleep(5);
-
-*/
 	return (0);
 }
 
