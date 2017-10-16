@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/09/28 18:10:53 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/16 18:10:56 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ typedef struct		s_lst
 	int				max;
 	struct s_lst	*next;
 }					t_lst;
+
+typedef struct		s_l
+{
+	int		co;
+	int		li;
+}					t_l;
 
 t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls);
 t_lst	*giv_ls(char **ag, t_lst *ls);
