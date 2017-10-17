@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/16 19:25:03 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/17 18:09:23 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
+t_lst	*ls;
+
 int		set_up_term()
 {
 	char           *name_term;
@@ -50,13 +52,11 @@ int		set_up_term()
 	return (1);
 }
 
-
 int	ft_put(int c)
 {
 	write(1, &c, 1);
 	return(1);
 }
-
 
 void	my_list(t_lst *ls)
 {
@@ -87,26 +87,28 @@ void	my_list(t_lst *ls)
 	}
 }
 
-void intHandler(int dummy)
+void	s_win(int sig)
 {
-	printf("co = %i && li = %i && [%i]\n", tgetnum("co"), tgetnum("li"), dummy);
-	return;
-}
+	struct ttysize ts;
+	extern t_lst *ls;
 
-void	ls_signal(t_lst **ls)
-{
-	printf("debut\n");
 	set_up_term();
-	ls = NULL;
+	ioctl(1, TIOCGSIZE, &ts);
+	printf ("%i && lines %d\n", sig, ts.ts_lines);
+	printf ("columns %d\n", ts.ts_cols);
 }
 
-int     voir_touche(t_lst *ls)
+void	ls_signal(void)
+{
+	signal(SIGWINCH, s_win);
+}
+
+int     voir_touche(void)
 {
 	char     buffer[3];
 
-
-	signal(SIGWINCH, intHandler);
-	if (read(0, buffer, 3) != SIGWINCH)
+	ls_signal();
+	if (read(0, buffer, 3))
 		printf("%i\n", 4);
 	printf("C'est une touche %d %d %d !\n", buffer[0], buffer[1], buffer[2]);
 	if (buffer[0] == 4)
@@ -120,16 +122,17 @@ int     voir_touche(t_lst *ls)
 
 int		main(int ac, char **ag)
 {
-	t_lst	*ls;
+	extern t_lst	*ls;
 
 	ac = 0;
 	ls = giv_ls(ag, NULL);
-	set_up_term();
-	my_list(ls);
 //	set_up_term();
+//	my_list(ls);
+//	set_up_term();
+	exit(0);
 	while (42)
 	{
-		voir_touche(ls);
+		voir_touche();
 	}
 	return (0);
 }
