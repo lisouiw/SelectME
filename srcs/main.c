@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/17 18:09:23 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/19 19:07:44 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-t_lst	*ls;
 
 int		set_up_term()
 {
@@ -58,33 +57,44 @@ int	ft_put(int c)
 	return(1);
 }
 
-void	my_list(t_lst *ls)
+void	my_list(t_lst *ls, t_num *nb)
 {
 	int ver;
 	int i;
 	int x;
 	char *got;
+	char *su;
+	char *ue;
 
 	x = 0;
 	tputs(tgetstr("cl", NULL), 1, ft_put);
 	got = tgetstr("cm", NULL);
+	su = tgetstr("us", NULL);
+	ue = tgetstr("ue", NULL);
 	tputs(tgoto(got, x, 0),1,ft_put);
 	ver = tgetnum("li");
-	while (ls != NULL)
+	while (ls->end != 1)
 	{
 		i = 0;
 		tputs(tgoto(got, x, i),1,ft_put);
-	ver = tgetnum("li");
-		while ( ls != NULL && i < ver -1 )
+		ver = tgetnum("li");
+		while ( ls->end != 1 && i < ver -1 )
 		{
+			if (ls->info[0] == 1)
+				tputs(su, 1, ft_put);
 			tputs(ls->select, 1, ft_put);
+			tputs(ue, 1, ft_put);
 			ft_putstr_fd("\n",1);
 			ls = ls->next;
 			tputs(tgoto(got, x, i+1),1,ft_put);
 			++i;
 		}
-		x = x + 10;
+		x = x + nb->max;
 	}
+	tputs(ls->select, 1, ft_put);
+	ft_putstr_fd("\n",1);
+	ls = ls->next;
+	tputs(tgoto(got, x, i+1),1,ft_put);
 }
 
 void	s_win(int sig)
@@ -109,27 +119,28 @@ int     voir_touche(void)
 
 	ls_signal();
 	if (read(0, buffer, 3))
-		printf("%i\n", 4);
-	printf("C'est une touche %d %d %d !\n", buffer[0], buffer[1], buffer[2]);
+		;
+	//	printf("%i\n", 4);
 	if (buffer[0] == 4)
 	{
-		printf("Ctlr+d, on quitte !\n");
 		exit(0);
 	}
- ls = NULL;
+	ls = NULL;
 	return (0);
 }
 
 int		main(int ac, char **ag)
 {
 	extern t_lst	*ls;
+	extern t_num	*nb;
 
 	ac = 0;
-	ls = giv_ls(ag, NULL);
-//	set_up_term();
-//	my_list(ls);
-//	set_up_term();
-	exit(0);
+	ls = giv_ls(ag, NULL, &nb);
+	ls->info[0] = 1;
+	ls->info[1] = 0;
+	ls->info[2] = 0;
+	set_up_term();
+	my_list(ls, nb);
 	while (42)
 	{
 		voir_touche();

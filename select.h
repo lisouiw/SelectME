@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/17 17:44:20 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/19 19:02:03 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ typedef struct		s_lst
 	char			*select;
 	struct s_lst	*next;
 	struct s_lst	*prev;
+	int				start;
+	int				end;
+	int				info[3];
 }					t_lst;
 
 typedef struct		s_num
@@ -36,13 +39,9 @@ typedef struct		s_num
 	int				li;
 }					t_num;
 
-typedef struct		s_l
-{
-	int		co;
-	int		li;
-}					t_l;
-
+t_lst	*ls;
+t_num	*nb;
 t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls);
-t_lst	*giv_ls(char **ag, t_lst *ls);
+t_lst	*giv_ls(char **ag, t_lst *ls, t_num **nb);
 
 #endif
