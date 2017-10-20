@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/20 15:54:27 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/20 17:10:10 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_get	give_g(void)
 	return (get);
 }
 
-void	my_list(t_lst *ls)
+void	my_list(t_lst *ls, t_num *nb)
 {
 	int		i;
 	int		x;
@@ -104,7 +104,7 @@ void	s_win(int sig)
 	ioctl(1, TIOCGSIZE, &ts);
 	nb->tb[0] = ts.ts_cols;
 	nb->tb[1] = ts.ts_lines;
-	my_list(ls);
+	my_list(ls, nb);
 }
 
 void	s_quit(int sig)
@@ -120,19 +120,48 @@ void	ls_signal(void)
 	signal(SIGINT, s_quit);
 }
 
-int     voir_touche(t_lst *ls)
+t_lst	*modif_ls(t_lst *ls, char * buf, t_num *nb)
 {
-	char     buffer[3];
+	t_lst	*tmp;
+
+	tmp = ls;
+	while ((*tmp).info[3] != 1)
+		tmp = (*tmp).next;
+	(*tmp).info[3] = 0;
+	if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
+		tmp->next->info[3] = 1;
+	if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
+		(*tmp).prev->info[3] = 1;
+/*	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 67)
+		;
+	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 68)
+		;
+*/	my_list(ls, nb);
+	return (ls);
+/*	int i = 100;
+	while (--i > -2)
+	{
+		printf("%s ->[%i][%i]\n", (*ls)->select, (*ls)->info[3], (*ls)->info[0]);
+		*ls = (*ls)->next;
+	}
+	exit(0);
+
+
+ fleche haut 27 91 65
+ fleche bas 27 91 66
+ fleche droite 27 91 67
+ fleche gauche 27 91 68
+*/
+}
+
+t_lst    *voir_touche(t_lst **ls, t_num *nb)
+{
+	char	buf[3];
 
 	ls_signal();
-	if (read(0, buffer, 3))
-		;
-	if (buffer[0] == 4)
-	{
-		exit(0);
-	}
-	ls = NULL;
-	return (0);
+	if (read(0, buf, 3))
+		*ls = modif_ls(*ls, buf, nb);
+	return (*ls);
 }
 
 int		main(int ac, char **ag)
@@ -142,7 +171,7 @@ int		main(int ac, char **ag)
 
 	ac = 0;
 	ls = giv_ls(ag, NULL, &nb);
-	my_list(ls);
+	my_list(ls, nb);
 /*	int i = 100;
 	while (--i > -2)
 	{
@@ -151,7 +180,7 @@ int		main(int ac, char **ag)
 	}
 	exit(0);
 */	while (42)
-		voir_touche(ls);
+		ls = voir_touche(&ls, nb);
 	return (0);
 }
 

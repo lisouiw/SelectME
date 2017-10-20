@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/20 15:27:50 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/20 16:59:59 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_lst	*create_ls(void)
 		return (NULL);
 	nw->select = (char*)malloc(sizeof(char));
 	nw->select = NULL;
+	nw->info[0] = 0;
 	nw->info[1] = 0;
 	nw->info[2] = 0;
 	nw->prev = NULL;
@@ -56,9 +57,9 @@ t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls)
 			return (NULL);
 		nw->select = ft_strdup(str);
 		nw->next = tmp;
+		nw->prev = tmp->prev;
 		tmp->prev->next = nw;
 		tmp->prev = nw;
-		nw->prev = tmp->prev;
 		return (ls);
 	}
 }
