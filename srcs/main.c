@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/19 19:07:44 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/20 15:54:27 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,8 @@
  ctrl+z 26 91 67
 */
 #include "../select.h"
-#include <curses.h>
-#include <term.h>
-#include <stdio.h>
-#include <errno.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
 
-
-int		set_up_term()
+int		set_up_term(void)
 {
 	char           *name_term;
 	struct termios term;
@@ -57,70 +50,83 @@ int	ft_put(int c)
 	return(1);
 }
 
-void	my_list(t_lst *ls, t_num *nb)
+t_get	give_g(void)
 {
-	int ver;
-	int i;
-	int x;
-	char *got;
-	char *su;
-	char *ue;
+	t_get	get;
+
+	get.cm = tgetstr("cm", NULL);
+	get.us = tgetstr("us", NULL);
+	get.ue = tgetstr("ue", NULL);
+	tputs(tgetstr("cl", NULL), 1, ft_put);
+	return (get);
+}
+
+void	my_list(t_lst *ls)
+{
+	int		i;
+	int		x;
+	t_get	g;
 
 	x = 0;
-	tputs(tgetstr("cl", NULL), 1, ft_put);
-	got = tgetstr("cm", NULL);
-	su = tgetstr("us", NULL);
-	ue = tgetstr("ue", NULL);
-	tputs(tgoto(got, x, 0),1,ft_put);
-	ver = tgetnum("li");
-	while (ls->end != 1)
+	g = give_g();
+	while (2)
 	{
+		if (x + nb->max - 2 > nb->tb[0])
+			return;
 		i = 0;
-		tputs(tgoto(got, x, i),1,ft_put);
-		ver = tgetnum("li");
-		while ( ls->end != 1 && i < ver -1 )
+		while (i < nb->tb[1])
 		{
-			if (ls->info[0] == 1)
-				tputs(su, 1, ft_put);
+			tputs(tgoto(g.cm, x, i), 1, ft_put);
+			if (ls->info[3] == 1)
+				tputs(g.us, 1, ft_put);
 			tputs(ls->select, 1, ft_put);
-			tputs(ue, 1, ft_put);
-			ft_putstr_fd("\n",1);
+			tputs(g.ue, 1, ft_put);
 			ls = ls->next;
-			tputs(tgoto(got, x, i+1),1,ft_put);
+			if (ls->info[1] == 1)
+			{
+				tputs(tgetstr("vi", NULL),1,ft_put);
+				return;
+			}
 			++i;
 		}
 		x = x + nb->max;
 	}
-	tputs(ls->select, 1, ft_put);
-	ft_putstr_fd("\n",1);
-	ls = ls->next;
-	tputs(tgoto(got, x, i+1),1,ft_put);
 }
 
 void	s_win(int sig)
 {
 	struct ttysize ts;
 	extern t_lst *ls;
+	extern t_num *nb;
 
+	sig = 0;
 	set_up_term();
 	ioctl(1, TIOCGSIZE, &ts);
-	printf ("%i && lines %d\n", sig, ts.ts_lines);
-	printf ("columns %d\n", ts.ts_cols);
+	nb->tb[0] = ts.ts_cols;
+	nb->tb[1] = ts.ts_lines;
+	my_list(ls);
+}
+
+void	s_quit(int sig)
+{
+	sig = 0;
+	tputs(tgetstr("ve", NULL),1,ft_put);
+	exit(0);
 }
 
 void	ls_signal(void)
 {
 	signal(SIGWINCH, s_win);
+	signal(SIGINT, s_quit);
 }
 
-int     voir_touche(void)
+int     voir_touche(t_lst *ls)
 {
 	char     buffer[3];
 
 	ls_signal();
 	if (read(0, buffer, 3))
 		;
-	//	printf("%i\n", 4);
 	if (buffer[0] == 4)
 	{
 		exit(0);
@@ -136,15 +142,16 @@ int		main(int ac, char **ag)
 
 	ac = 0;
 	ls = giv_ls(ag, NULL, &nb);
-	ls->info[0] = 1;
-	ls->info[1] = 0;
-	ls->info[2] = 0;
-	set_up_term();
-	my_list(ls, nb);
-	while (42)
+	my_list(ls);
+/*	int i = 100;
+	while (--i > -2)
 	{
-		voir_touche();
+		printf("%s ->[%i][%i]\n", ls->select, ls->info[1], ls->info[2]);
+		ls = ls->next;
 	}
+	exit(0);
+*/	while (42)
+		voir_touche(ls);
 	return (0);
 }
 

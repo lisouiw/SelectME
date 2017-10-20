@@ -6,11 +6,22 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/19 18:49:05 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/20 15:27:50 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
+
+
+///0f03ad8568
+/* *
+ * info[0] = video
+ * info[1] = debut
+ * info[2] = end
+ * info[3] = cursor
+ * info[4]
+ * info[5]
+ * */
 
 t_lst	*create_ls(void)
 {
@@ -20,8 +31,8 @@ t_lst	*create_ls(void)
 		return (NULL);
 	nw->select = (char*)malloc(sizeof(char));
 	nw->select = NULL;
-	nw->start = 1;
-	nw->end = 1;
+	nw->info[1] = 0;
+	nw->info[2] = 0;
 	nw->prev = NULL;
 	nw->next = NULL;
 	return (nw);
@@ -41,26 +52,29 @@ t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls)
 	}
 	else
 	{
-		if(!(nw = (t_lst*)malloc(sizeof(t_lst))))
+		if (!(nw = (t_lst*)malloc(sizeof(t_lst))))
 			return (NULL);
 		nw->select = ft_strdup(str);
-		nw->end = 1;
 		nw->next = tmp;
+		tmp->prev->next = nw;
 		tmp->prev = nw;
-		while (tmp->end != 1)
-			tmp = tmp->next;
-		tmp->end = 0;
-		tmp->next = nw;
-		nw->prev = tmp;
+		nw->prev = tmp->prev;
 		return (ls);
 	}
 }
 
+
 t_num	*alloue_num(t_num *nb, int max)
 {
+	struct ttysize ts;
+
 	nb = (t_num*)malloc(sizeof(t_num));
-	nb->max = max + 1;
-	return(nb);
+	nb->max = max + 2;
+	set_up_term();
+	ioctl(1, TIOCGSIZE, &ts);
+	nb->tb[0] = ts.ts_cols;
+	nb->tb[1] = ts.ts_lines;
+	return (nb);
 }
 
 t_lst	*giv_ls(char **ag, t_lst *ls, t_num **nb)
@@ -78,5 +92,8 @@ t_lst	*giv_ls(char **ag, t_lst *ls, t_num **nb)
 	ls = create_ls();
 	while (ag[++i])
 		ls = add_ls(ag[i], NULL, ls);
+	ls->info[1] = 1;
+	ls->prev->info[2] = 1;
+	ls->info[3] = 1;
 	return (ls);
 }
