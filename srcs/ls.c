@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/20 16:59:59 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/27 14:20:20 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
  * info[1] = debut
  * info[2] = end
  * info[3] = cursor
- * info[4]
- * info[5]
+ * info[4] = pos colonne;
+ * info[5] = pos line;
  * */
 
 t_lst	*create_ls(void)
@@ -34,6 +34,8 @@ t_lst	*create_ls(void)
 	nw->info[0] = 0;
 	nw->info[1] = 0;
 	nw->info[2] = 0;
+	nw->info[4] = 0;
+	nw->info[5] = 0;
 	nw->prev = NULL;
 	nw->next = NULL;
 	return (nw);
@@ -75,6 +77,7 @@ t_num	*alloue_num(t_num *nb, int max)
 	ioctl(1, TIOCGSIZE, &ts);
 	nb->tb[0] = ts.ts_cols;
 	nb->tb[1] = ts.ts_lines;
+	nb->tb[2] = 0;
 	return (nb);
 }
 
