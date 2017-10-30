@@ -6,7 +6,7 @@
 #    By: ltran <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/08 12:54:08 by ltran             #+#    #+#              #
-#    Updated: 2017/10/17 09:43:03 by ltran            ###   ########.fr        #
+#    Updated: 2017/10/30 15:26:46 by ltran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRCDIR = srcs
 
 FLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c ls.c
+SRCS = main.c ls.c modif_ls.c tools.c
 
 SRC_N = $(addprefix $(SRCDIR)/, $(SRCS))
 
@@ -32,7 +32,7 @@ all : $(NAME)
 
 $(NAME): $(OBJS)
 	make -C ./libft/
-	$(CC) $(OBJS) $(LIBFT) $(FLAGS) -o $(NAME) -ltermcap
+	$(CC) $(OBJS) $(LIBFT) $(FLAGS) -o $(NAME) -ltermcap -g
 
 ${OBJDIR}/%.o: srcs/%.c
 	@mkdir -p ${OBJDIR}

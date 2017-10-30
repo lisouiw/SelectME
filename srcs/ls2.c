@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/30 11:21:00 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/30 10:01:22 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_lst	*create_ls(void)
 
 	if (!(nw = (t_lst*)malloc(sizeof(t_lst))))
 		return (NULL);
+//	nw->select = (char*)malloc(sizeof(char));
 	nw->select = NULL;
 	nw->info[0] = 0;
 	nw->info[1] = 0;
@@ -76,7 +77,7 @@ t_num	*alloue_num(t_num *nb, int max)
 	ioctl(1, TIOCGSIZE, &ts);
 	nb->tb[0] = ts.ts_cols;
 	nb->tb[1] = ts.ts_lines;
-//	nb->tb[2] = 0;
+	nb->tb[2] = 0;
 	return (nb);
 }
 
