@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/30 14:43:07 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/31 19:16:20 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct		s_lst
 	char			*select;
 	struct s_lst	*next;
 	struct s_lst	*prev;
-	int				info[6];
+	int				info[7];
 }					t_lst;
 
 typedef struct		s_get
@@ -49,7 +49,7 @@ t_num	*nb;
 
 //main
 int		set_up_term(void);
-t_lst	*voir_touche(t_lst *ls, t_num *nb);
+t_lst	*voir_touche(t_lst *ls);
 
 //ls
 t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls);
@@ -63,7 +63,7 @@ void	s_quit(int sig);
 void	ls_signal(void);
 void	move_me(t_lst *lst, int i, int li);
 void	del_ls(t_lst **ls);
-t_lst	*modif_ls(t_lst *ls, char *buf, t_num *nb);
+t_lst	*modif_ls(t_lst *ls, char *buf);
 
 //tools
 int		ft_put(int c);

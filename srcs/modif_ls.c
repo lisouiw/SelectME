@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/30 15:27:55 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/31 19:16:33 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	s_quit(int sig)
 {
 	sig = 0;
 	tputs(tgetstr("ve", NULL),1,ft_put);
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 void	ls_signal(void)
@@ -58,46 +58,37 @@ void	del_ls(t_lst **ls)
 {
 	t_lst	**tmp;
 
-	tmp = NULL;
-	tmp = *(&ls);
+	tmp = &(*ls);
 	if ((*ls)->info[1] == 1 && (*ls)->info[2] == 1)
-	{
-		printf("                 1\n");
 		exit(0);
-	}
 	else if ((*ls)->info[1] == 1)
-	{
-		printf("                 2\n");
 		(*ls)->next->info[1] = 1;
-	}
 	else if ((*ls)->info[2] == 1)
-	{
-		printf("                 3\n");
 		(*ls)->prev->info[2] = 1;
-	}
-	(*ls) = (*tmp)->next;
-	(*ls)->prev = (*tmp)->prev->prev;
-	(*ls)->prev->next = *(tmp);
-	(*ls)->info[3] = 1;
+	(*ls)->prev->next = (*ls)->next;
+	(*ls)->next->prev = (*ls)->prev;
+	(*tmp)->next->info[3] = 1;
+	free((*tmp)->select);
+	free(*tmp);
 }
 
-t_lst	*modif_ls(t_lst *ls, char *buf, t_num *nb)
+t_lst	*modif_ls(t_lst *ls, char *buf)
 {
 	t_lst	*tmp;
-	t_num	*s;
 
-	s = nb;
 	tmp = ls;
 	while ((*tmp).info[3] != 1)
-		tmp = (*tmp).next;
-	(*tmp).info[3] = 0;
+		tmp = tmp->next;
+	tmp->info[3] = 0;
 	if (buf[0] == 27 && buf[1] == 91 && buf[2] == 66)
 		tmp->next->info[3] = 1;
 	else if (buf[0] == 27 && buf[1] == 91 && buf[2] == 65)
-		(*tmp).prev->info[3] = 1;
+		tmp->prev->info[3] = 1;
 	else if (buf[0] == 27 && buf[1] == 91 && (buf[2] == 67 || buf[2] == 68))
 		move_me(tmp, buf[2], tmp->info[5]);
 	else if (buf[0] == 127 && buf[1] == 0 & buf[2] == 0)
 		del_ls(&tmp);
+	else
+		tmp->info[3] = 1;
 	return (ls);
 }

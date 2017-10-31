@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:06:10 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/30 15:00:10 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/31 19:17:16 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,12 @@ void		my_list(t_lst **ls, t_num **nb)
 
 	x = 0;
 	g = give_g();
-	while (2)
+	if ((*ls)->next->info[1] == 1)
+		*ls = (*ls)->next;
+	while ((*ls)->info[1] != 1)
+		*ls = (*ls)->next;
+	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
 	{
-		if (x + (*nb)->max - 2 > (*nb)->tb[0])
-			return;
 		i = 0;
 		while (i < (*nb)->tb[1])
 		{
@@ -54,12 +56,11 @@ void		my_list(t_lst **ls, t_num **nb)
 			*ls = (*ls)->next;
 			if ((*ls)->info[1] == 1)
 			{
-				tputs(tgetstr("vi", NULL),1,ft_put);
+				tputs(tgetstr("vi", NULL), 1, ft_put);
 				return;
 			}
 			++i;
 		}
 		x = x + (*nb)->max;
-		(*nb)->tb[2] = x /(*nb)->max;
 	}
 }

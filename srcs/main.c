@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/30 11:49:32 by ltran            ###   ########.fr       */
+/*   Updated: 2017/10/31 19:08:02 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ t_lst    *voir_touche(t_lst *ls, t_num *nb)
 	ls_signal();
 	if (read(0, buf, 3))
 		ls = modif_ls(ls, buf, nb);
-	my_list(&ls, &nb);
 	return (ls);
 }
 
@@ -64,9 +63,12 @@ int		main(int ac, char **ag)
 	extern t_num	*nb;
 
 	ac = 0;
+	ls = NULL;
 	ls = giv_ls(ag, NULL, &nb);
-	my_list(&ls, &nb);
 	while (42)
+	{
+		my_list(&ls, &nb);
 		ls = voir_touche(ls, nb);
+	}
 	return (0);
 }
