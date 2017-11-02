@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:06:10 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/31 19:17:16 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/02 12:40:46 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,30 @@ t_get		give_g(void)
 	get.ue = tgetstr("ue", NULL);
 	tputs(tgetstr("cl", NULL), 1, ft_put);
 	return (get);
+}
+
+int		check(int x, t_num **nb, t_lst **ls)
+{
+	int		i;
+
+	if ((*ls)->next->info[1] == 1)
+		*ls = (*ls)->next;
+	while ((*ls)->info[1] != 1)
+		*ls = (*ls)->next;
+
+	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
+	{
+		i = 0;
+		while (i < (*nb)->tb[1])
+		{
+			*ls = (*ls)->next;
+			if ((*ls)->info[1] == 1)
+				return(1);
+			++i;
+		}
+		x = x + (*nb)->max;
+	}
+	return(0);
 }
 
 void		my_list(t_lst **ls, t_num **nb)

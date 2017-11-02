@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/31 19:16:20 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/02 12:38:57 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_num	*nb;
 
 //main
 int		set_up_term(void);
-t_lst	*voir_touche(t_lst *ls);
+t_lst	*voir_touche(t_lst *ls, t_num *nb);
 
 //ls
 t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls);
@@ -69,5 +69,6 @@ t_lst	*modif_ls(t_lst *ls, char *buf);
 int		ft_put(int c);
 t_get	give_g(void);
 void	my_list(t_lst **ls, t_num **nb);
+int		check(int x, t_num **nb, t_lst **lst);
 
 #endif
