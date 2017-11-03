@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/02 12:38:57 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/03 15:28:51 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ typedef struct		s_get
 	char	*cm;
 	char	*us;
 	char	*ue;
+	char	*so;
+	char	*se;
 }					t_get;
 
 typedef struct		s_num

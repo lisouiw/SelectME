@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/02 12:40:17 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/03 16:27:52 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,11 @@ t_lst    *voir_touche(t_lst *ls, t_num *nb)
 	buf[2] = 0;
 	ls_signal();
 	if (read(0, buf, 3) && check(0, &nb, &ls) == 1)
+	{
+	//	printf("%i %i %i", buf[0], buf[1], buf[2]);
+	//	exit(0);
 		ls = modif_ls(ls, buf);
+	}
 	return (ls);
 }
 
@@ -88,7 +92,11 @@ int		main(int ac, char **ag)
 	extern t_lst	*ls;
 	extern t_num	*nb;
 
-	ac = 0;
+	if (getenv("TERM") == NULL || ac == 1)
+	{
+		ft_putendl_fd((ac == 1 ? "No arguments": "Can't identify the terminal"), 1);
+		exit(0);
+	}
 	ls = NULL;
 	ls = giv_ls(ag, NULL, &nb);
 	init_ls(&ls, &nb);

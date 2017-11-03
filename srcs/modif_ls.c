@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/10/31 19:16:33 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/03 16:47:10 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ void	s_win(int sig)
 	my_list(&ls, &nb);
 }
 
+void	s_stop(int sig)
+{
+	printf("%i", sig);
+	exit(0);
+}
+
 void	s_quit(int sig)
 {
 	sig = 0;
@@ -37,6 +43,8 @@ void	ls_signal(void)
 {
 	signal(SIGWINCH, s_win);
 	signal(SIGINT, s_quit);
+	
+	signal(SIGTSTP, s_stop);
 }
 
 void	move_me(t_lst *ls, int i, int li)
@@ -88,6 +96,12 @@ t_lst	*modif_ls(t_lst *ls, char *buf)
 		move_me(tmp, buf[2], tmp->info[5]);
 	else if (buf[0] == 127 && buf[1] == 0 & buf[2] == 0)
 		del_ls(&tmp);
+//	else if (buf[0] == 10 && buf[1] == 0 & buf[2] == 0)
+	else if (buf[0] == 32 && buf[1] == 0 & buf[2] == 0)
+	{
+		tmp->info[0] = (tmp->info[0] == 0) ? 1 : 0;
+		tmp->next->info[3] = 1;
+	}
 	else
 		tmp->info[3] = 1;
 	return (ls);
