@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/03 16:47:10 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/05 16:11:04 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,27 @@ void	s_win(int sig)
 	my_list(&ls, &nb);
 }
 
-void	s_stop(int sig)
+void	s_ctrl_z(int sig)
 {
-	printf("%i", sig);
+	tputs(tgetstr("ve", NULL), 1, ft_put);
+	sig = 0;
+	set_up_term();
 	exit(0);
 }
 
-void	s_quit(int sig)
+void	s_ctrl_c(int sig)
 {
 	sig = 0;
-	tputs(tgetstr("ve", NULL),1,ft_put);
+	set_up_term();
 	exit(EXIT_SUCCESS);
 }
 
 void	ls_signal(void)
 {
+	set_up_term();
+	signal(SIGTSTP, s_ctrl_z);
 	signal(SIGWINCH, s_win);
-	signal(SIGINT, s_quit);
-	
-	signal(SIGTSTP, s_stop);
+	signal(SIGINT, s_ctrl_c);
 }
 
 void	move_me(t_lst *ls, int i, int li)

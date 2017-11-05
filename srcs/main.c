@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/03 16:27:52 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/05 16:25:15 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,20 @@
 */
 #include "../select.h"
 
+int		init(void)
+{
+	char           *name_term;
+	struct termios term;
+
+	if ((name_term = getenv("TERM")) == NULL)
+		return (-1);
+	if (tgetent(NULL, name_term) == ERR)
+		return (-1);
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		return (-1);
+	return (1);
+}
+
 int		set_up_term(void)
 {
 	char           *name_term;
@@ -34,11 +48,11 @@ int		set_up_term(void)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);
-	term.c_lflag &= ~(ICANON);
-	term.c_lflag &= ~(ECHO);
+	term.c_lflag = (ICANON);
+	term.c_lflag = (ECHO);
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
-	term.c_cc[VSUSP] = ISIG;
+	term.c_cc[VINTR] = 0;
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (1);
@@ -92,6 +106,8 @@ int		main(int ac, char **ag)
 	extern t_lst	*ls;
 	extern t_num	*nb;
 
+	init();
+	set_up_term();
 	if (getenv("TERM") == NULL || ac == 1)
 	{
 		ft_putendl_fd((ac == 1 ? "No arguments": "Can't identify the terminal"), 1);

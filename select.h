@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/03 15:28:51 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/05 16:05:33 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ t_num	*nb;
 
 //main
 int		set_up_term(void);
+int		init(void);
 t_lst	*voir_touche(t_lst *ls, t_num *nb);
 
 //ls
