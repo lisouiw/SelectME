@@ -10,17 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*
- fleche haut 27 91 65
- fleche bas 27 91 66
- fleche droite 27 91 67
- fleche gauche 27 91 68
- espace 32 91 67
- return (enter) 10 91 67
- echap 27 -85 -5
- delete 127 91 67
- ctrl+z 26 91 67
-*/
 #include "../select.h"
 
 int		init(void)
@@ -32,6 +21,7 @@ int		init(void)
 		return (-1);
 	if (tgetent(NULL, name_term) == ERR)
 		return (-1);
+	term.c_lflag = (ICANON | ECHO);
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (1);
@@ -105,7 +95,6 @@ int		main(int ac, char **ag)
 	extern t_lst	*ls;
 	extern t_num	*nb;
 
-//	init();
 	set_up_term();
 	if (getenv("TERM") == NULL || ac == 1)
 	{

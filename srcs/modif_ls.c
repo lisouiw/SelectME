@@ -30,21 +30,18 @@ void	s_ctrl_z(int sig)
 {
 	tputs(tgetstr("ve", NULL), 1, ft_put);
 	sig = 0;
-	set_up_term();
-	exit(0);
 }
 
 void	s_ctrl_c(int sig)
 {
 	sig = 0;
 	tputs(tgetstr("ve", NULL), 1, ft_put);
-	set_up_term();
 	exit(EXIT_SUCCESS);
 }
 
 void	ls_signal(void)
 {
-	signal(SIGTSTP, s_ctrl_z);
+	signal(SIGTSTP, SIG_DFL);
 	signal(SIGWINCH, s_win);
 	signal(SIGINT, s_ctrl_c);
 }
