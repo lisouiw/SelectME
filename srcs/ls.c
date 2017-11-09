@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/02 11:03:43 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/09 17:36:10 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ t_num	*alloue_num(t_num *nb, int max)
 
 	nb = (t_num*)malloc(sizeof(t_num));
 	nb->max = max + 2;
-	set_up_term();
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		exit(0);
 	ioctl(1, TIOCGSIZE, &ts);
 	nb->tb[0] = ts.ts_cols;
 	nb->tb[1] = ts.ts_lines;

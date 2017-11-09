@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/05 16:05:33 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/09 16:00:06 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <term.h>
 # include <termcap.h>
 # include <unistd.h>
+# include <signal.h>
 
 typedef struct		s_lst
 {
@@ -48,8 +49,11 @@ typedef struct		s_num
 
 t_lst	*ls;
 t_num	*nb;
+struct termios term;
+struct termios init_s;
 
 //main
+void	init_ls(t_lst **ls, t_num **nb);
 int		set_up_term(void);
 int		init(void);
 t_lst	*voir_touche(t_lst *ls, t_num *nb);
@@ -67,6 +71,7 @@ void	ls_signal(void);
 void	move_me(t_lst *lst, int i, int li);
 void	del_ls(t_lst **ls);
 t_lst	*modif_ls(t_lst *ls, char *buf);
+void	boucle(t_lst *ls, t_num *nb);
 
 //tools
 int		ft_put(int c);

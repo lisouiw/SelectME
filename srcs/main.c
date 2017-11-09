@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/05 16:33:54 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/09 19:26:19 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,7 @@
 int		init(void)
 {
 	char           *name_term;
-	struct termios term;
-
-	if ((name_term = getenv("TERM")) == NULL)
-		return (-1);
-	if (tgetent(NULL, name_term) == ERR)
-		return (-1);
-	term.c_lflag = (ICANON | ECHO);
-	if (tcsetattr(0, TCSANOW, &term) == -1)
-		return (-1);
-	return (1);
-}
-
-int		set_up_term(void)
-{
-	char           *name_term;
-	struct termios term;
+	struct	termios term;
 
 	if ((name_term = getenv("TERM")) == NULL)
 		return (-1);
@@ -38,10 +23,29 @@ int		set_up_term(void)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);
-	term.c_lflag &= ~(ICANON);
+	term.c_lflag |= (ECHO);
+	term.c_lflag |= (ICANON);
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		return (-1);
+	return (1);
+}
+
+int		set_up_term(void)
+{
+	char	 *name_term;
+
+	if ((name_term = getenv("TERM")) == NULL)
+		return (-1);
+	if (tgetent(NULL, name_term) == ERR)
+		return (-1);
+	if (tcgetattr(0, &term) == -1)
+		return (-1);
+	term.c_lflag |= (ECHONL);
 	term.c_lflag &= ~(ECHO);
+	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
+	term.c_lflag &= ~(ECHOCTL);
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (1);
@@ -51,6 +55,8 @@ t_lst    *voir_touche(t_lst *ls, t_num *nb)
 {
 	char	buf[3];
 
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		exit(0);
 	buf[0] = 0;
 	buf[1] = 0;
 	buf[2] = 0;
@@ -90,11 +96,17 @@ void	init_ls(t_lst **ls, t_num **nb)
 	}
 }
 
+void	boucle(t_lst *ls, t_num *nb)
+{
+	while (42)
+	{
+		my_list(&ls, &nb);
+		ls = voir_touche(ls, nb);
+	}
+}
+
 int		main(int ac, char **ag)
 {
-	extern t_lst	*ls;
-	extern t_num	*nb;
-
 	set_up_term();
 	if (getenv("TERM") == NULL || ac == 1)
 	{
@@ -104,10 +116,6 @@ int		main(int ac, char **ag)
 	ls = NULL;
 	ls = giv_ls(ag, NULL, &nb);
 	init_ls(&ls, &nb);
-	while (42)
-	{
-		my_list(&ls, &nb);
-		ls = voir_touche(ls, nb);
-	}
+	boucle(ls, nb);
 	return (0);
 }

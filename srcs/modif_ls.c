@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/05 16:34:46 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/09 19:31:46 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,33 +15,46 @@
 void	s_win(int sig)
 {
 	struct ttysize ts;
-	extern t_lst *ls;
-	extern t_num *nb;
 
 	sig = 0;
-	set_up_term();
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		exit(0);
 	ioctl(1, TIOCGSIZE, &ts);
 	nb->tb[0] = ts.ts_cols;
 	nb->tb[1] = ts.ts_lines;
 	my_list(&ls, &nb);
+	my_list(&ls, &nb);
+}
+
+void	s_continu(int sig)
+{
+	if (tcsetattr(0, TCSANOW, &term) == -1)
+		exit(0);
+	s_win(0);
+	sig = 0;
 }
 
 void	s_ctrl_z(int sig)
 {
-	tputs(tgetstr("ve", NULL), 1, ft_put);
 	sig = 0;
+	tputs(tgetstr("ve", NULL), 1, ft_put);
+	init();
+	signal(SIGTSTP, SIG_DFL);
+	ioctl(0, TIOCSTI, "\032");
 }
 
 void	s_ctrl_c(int sig)
 {
 	sig = 0;
 	tputs(tgetstr("ve", NULL), 1, ft_put);
+	init();
 	exit(EXIT_SUCCESS);
 }
 
 void	ls_signal(void)
 {
-	signal(SIGTSTP, SIG_DFL);
+	signal(SIGTSTP, s_ctrl_z);
+	signal(SIGCONT, s_continu);
 	signal(SIGWINCH, s_win);
 	signal(SIGINT, s_ctrl_c);
 }
