@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: ltran <ltran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:06:10 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 14:54:36 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 18:01:40 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		ft_put(int c)
 {
-	write(1, &c, 1);
+	write(0, &c, 1);
 	return (1);
 }
 
@@ -57,12 +57,12 @@ int		check(int x, t_num **nb, t_lst **ls)
 void	my_tputs(t_lst **ls, t_get g)
 {
 	if ((*ls)->info[0] == 1)
-		tputs(g.so, 1, ft_put);
+		tputs(g.so, 0, ft_put);
 	if ((*ls)->info[3] == 1)
-		tputs(g.us, 1, ft_put);
-	tputs((*ls)->select, 1, ft_put);
-	tputs(g.ue, 1, ft_put);
-	tputs(g.se, 1, ft_put);
+		tputs(g.us, 0, ft_put);
+	tputs((*ls)->select, 0, ft_put);
+	tputs(g.ue, 0, ft_put);
+	tputs(g.se, 0, ft_put);
 }
 
 void	my_list(t_lst **ls, t_num **nb, int x, t_get g)
@@ -78,16 +78,13 @@ void	my_list(t_lst **ls, t_num **nb, int x, t_get g)
 		i = -1;
 		while (++i < (*nb)->tb[1])
 		{
-			tputs(tgoto(g.cm, x, i), 1, ft_put);
+			tputs(tgoto(g.cm, x, i), 0, ft_put);
 			(*ls)->info[4] = x;
 			(*ls)->info[5] = i;
 			my_tputs(ls, g);
 			*ls = (*ls)->next;
 			if ((*ls)->info[1] == 1)
-			{
-				tputs(tgetstr("vi", NULL), 1, ft_put);
 				return ;
-			}
 		}
 		x = x + (*nb)->max;
 	}

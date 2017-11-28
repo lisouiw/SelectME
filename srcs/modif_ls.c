@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 15:06:06 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 17:59:38 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ void	s_win(int sig)
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		exit(0);
 	ioctl(1, TIOCGSIZE, &ts);
-	nb->tb[0] = ts.ts_cols;
-	nb->tb[1] = ts.ts_lines;
-	my_list(&ls, &nb, 0, give_g());
+	g_nb->tb[0] = ts.ts_cols;
+	g_nb->tb[1] = ts.ts_lines;
+	my_list(&g_ls, &g_nb, 0, give_g());
 }
 
 void	s_continu(int sig)
@@ -39,15 +39,17 @@ void	s_ctrl_z(int sig)
 	init();
 	signal(SIGTSTP, SIG_DFL);
 	ioctl(0, TIOCSTI, "\032");
-	tputs(tgetstr("cl", NULL), 1, ft_put);
-	tputs(tgetstr("ve", NULL), 1, ft_put);
+	tputs(tgetstr("cl", NULL), 0, ft_put);
+	tputs(tgetstr("ve", NULL), 0, ft_put);
+	tputs(tgetstr("te", NULL), 0, ft_put);
 }
 
 void	s_ctrl_c(int sig)
 {
 	sig = 0;
-	tputs(tgetstr("ve", NULL), 1, ft_put);
-	tputs(tgetstr("cl", NULL), 1, ft_put);
+	tputs(tgetstr("ve", NULL), 0, ft_put);
+	tputs(tgetstr("te", NULL), 0, ft_put);
+	tputs(tgetstr("cl", NULL), 0, ft_put);
 	init();
 	exit(EXIT_SUCCESS);
 }
@@ -85,6 +87,7 @@ void	del_ls(t_lst **ls)
 	{
 		tputs(tgetstr("cl", NULL), 1, ft_put);
 		tputs(tgetstr("ve", NULL), 1, ft_put);
+		tputs(tgetstr("te", NULL), 0, ft_put);
 		exit(0);
 	}
 	else if ((*ls)->info[1] == 1)
@@ -102,17 +105,19 @@ void	enter_tch(t_lst *ls)
 {
 	tputs(tgetstr("cl", NULL), 1, ft_put);
 	tputs(tgetstr("ve", NULL), 1, ft_put);
+	tputs(tgetstr("te", NULL), 1, ft_put);
 	while (ls->info[2] != 1)
 	{
 		if (ls->info[0] == 1)
 		{
-			ft_putstr(ls->select);
-			ft_putchar(' ');
+			ft_putstr_fd(ls->select, 1);
+			ft_putchar_fd(' ', 1);
 		}
 		ls = ls->next;
 	}
 	if (ls->info[0] == 1)
 		ft_putstr(ls->select);
+	init();
 	exit(0);
 }
 

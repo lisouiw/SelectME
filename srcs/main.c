@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 15:19:01 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 17:58:52 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ t_lst	*voir_touche(t_lst *ls, t_num *nb)
 	buf[2] = 0;
 	ls_signal();
 	if (read(0, buf, 3) && check(0, &nb, &ls) == 1)
-	{
 		ls = modif_ls(ls, buf);
-	}
 	return (ls);
 }
 
@@ -97,6 +95,7 @@ void	boucle(t_lst *ls, t_num *nb)
 	while (42)
 	{
 		my_list(&ls, &nb, 0, give_g());
+		wait(0);
 		ls = voir_touche(ls, nb);
 	}
 }
@@ -106,9 +105,12 @@ int		main(int ac, char **ag)
 	set_up_term();
 	if (getenv("TERM") == NULL || ac == 1)
 	{
-		ft_putendl_fd((ac == 1 ? "No arguments" : "Can't identify the terminal"), 1);
+		ft_putendl_fd((ac == 1 ? "No arguments" : "Can't identify the terminal")
+				, 1);
 		exit(0);
 	}
+	tputs(tgetstr("vi", NULL), 0, ft_put);
+	tputs(tgetstr("ti", NULL), 0, ft_put);
 	g_ls = NULL;
 	g_ls = giv_ls(ag, NULL, &g_nb);
 	init_ls(&g_ls, &g_nb);
