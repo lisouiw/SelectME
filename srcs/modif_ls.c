@@ -49,7 +49,6 @@ void	s_ctrl_c(int sig)
 	sig = 0;
 	tputs(tgetstr("ve", NULL), 0, ft_put);
 	tputs(tgetstr("te", NULL), 0, ft_put);
-	tputs(tgetstr("cl", NULL), 0, ft_put);
 	init();
 	exit(EXIT_SUCCESS);
 }
@@ -85,10 +84,10 @@ void	del_ls(t_lst **ls)
 	tmp = &(*ls);
 	if ((*ls)->info[1] == 1 && (*ls)->info[2] == 1)
 	{
-		tputs(tgetstr("cl", NULL), 1, ft_put);
-		tputs(tgetstr("ve", NULL), 1, ft_put);
+		tputs(tgetstr("ve", NULL), 0, ft_put);
 		tputs(tgetstr("te", NULL), 0, ft_put);
-		exit(0);
+		init();
+		exit(EXIT_SUCCESS);
 	}
 	else if ((*ls)->info[1] == 1)
 		(*ls)->next->info[1] = 1;
@@ -103,7 +102,6 @@ void	del_ls(t_lst **ls)
 
 void	enter_tch(t_lst *ls)
 {
-	tputs(tgetstr("cl", NULL), 1, ft_put);
 	tputs(tgetstr("ve", NULL), 1, ft_put);
 	tputs(tgetstr("te", NULL), 1, ft_put);
 	while (ls->info[2] != 1)
