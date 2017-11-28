@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/09 16:00:06 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 15:16:29 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ typedef struct		s_lst
 
 typedef struct		s_get
 {
-	char	*cm;
-	char	*us;
-	char	*ue;
-	char	*so;
-	char	*se;
+	char			*cm;
+	char			*us;
+	char			*ue;
+	char			*so;
+	char			*se;
 }					t_get;
 
 typedef struct		s_num
@@ -47,36 +47,36 @@ typedef struct		s_num
 	int				tb[3];
 }					t_num;
 
-t_lst	*ls;
-t_num	*nb;
-struct termios term;
-struct termios init_s;
+t_num	*g_nb;
+t_lst	*g_ls;
+struct termios		term;
+//struct termios	init_s;
 
 //main
-void	init_ls(t_lst **ls, t_num **nb);
-int		set_up_term(void);
-int		init(void);
-t_lst	*voir_touche(t_lst *ls, t_num *nb);
+void				init_ls(t_lst **ls, t_num **nb);
+int					set_up_term(void);
+int					init(void);
+t_lst				*voir_touche(t_lst *ls, t_num *nb);
 
 //ls
-t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls);
-t_lst	*giv_ls(char **ag, t_lst *ls, t_num **nb);
-t_num	*alloue_num(t_num *nb, int max);
-t_lst	*create_ls(void);
+t_lst				*add_ls(char *str, t_lst *nw, t_lst *ls);
+t_lst				*giv_ls(char **ag, t_lst *ls, t_num **nb);
+t_num				*alloue_num(t_num *nb, int max);
+t_lst				*create_ls(void);
 
 //modif_ls
-void	s_win(int sig);
-void	s_quit(int sig);
-void	ls_signal(void);
-void	move_me(t_lst *lst, int i, int li);
-void	del_ls(t_lst **ls);
-t_lst	*modif_ls(t_lst *ls, char *buf);
-void	boucle(t_lst *ls, t_num *nb);
+void				s_win(int sig);
+void				s_quit(int sig);
+void				ls_signal(void);
+void				move_me(t_lst *lst, int i, int li);
+void				del_ls(t_lst **ls);
+t_lst				*modif_ls(t_lst *ls, char *buf);
+void				boucle(t_lst *ls, t_num *nb);
 
 //tools
-int		ft_put(int c);
-t_get	give_g(void);
-void	my_list(t_lst **ls, t_num **nb);
-int		check(int x, t_num **nb, t_lst **lst);
+int					ft_put(int c);
+t_get				give_g(void);
+void				my_list(t_lst **ls, t_num **nb, int x, t_get g);
+int					check(int x, t_num **nb, t_lst **lst);
 
 #endif

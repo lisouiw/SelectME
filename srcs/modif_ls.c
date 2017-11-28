@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 12:12:15 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 15:06:06 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ void	s_win(int sig)
 	ioctl(1, TIOCGSIZE, &ts);
 	nb->tb[0] = ts.ts_cols;
 	nb->tb[1] = ts.ts_lines;
-	my_list(&ls, &nb);
-	my_list(&ls, &nb);
+	my_list(&ls, &nb, 0, give_g());
 }
 
 void	s_continu(int sig)
@@ -37,10 +36,11 @@ void	s_continu(int sig)
 void	s_ctrl_z(int sig)
 {
 	sig = 0;
-	tputs(tgetstr("ve", NULL), 1, ft_put);
 	init();
 	signal(SIGTSTP, SIG_DFL);
 	ioctl(0, TIOCSTI, "\032");
+	tputs(tgetstr("cl", NULL), 1, ft_put);
+	tputs(tgetstr("ve", NULL), 1, ft_put);
 }
 
 void	s_ctrl_c(int sig)
@@ -98,6 +98,24 @@ void	del_ls(t_lst **ls)
 	free(*tmp);
 }
 
+void	enter_tch(t_lst *ls)
+{
+	tputs(tgetstr("cl", NULL), 1, ft_put);
+	tputs(tgetstr("ve", NULL), 1, ft_put);
+	while (ls->info[2] != 1)
+	{
+		if (ls->info[0] == 1)
+		{
+			ft_putstr(ls->select);
+			ft_putchar(' ');
+		}
+		ls = ls->next;
+	}
+	if (ls->info[0] == 1)
+		ft_putstr(ls->select);
+	exit(0);
+}
+
 t_lst	*modif_ls(t_lst *ls, char *buf)
 {
 	t_lst	*tmp;
@@ -115,34 +133,14 @@ t_lst	*modif_ls(t_lst *ls, char *buf)
 	else if (buf[0] == 127 && buf[1] == 0 & buf[2] == 0)
 		del_ls(&tmp);
 	else if (buf[0] == 10 && buf[1] == 0 & buf[2] == 0)
-	{
-		tputs(tgetstr("cl", NULL), 1, ft_put);
-		tputs(tgetstr("ve", NULL), 1, ft_put);
-		while (ls->info[2] != 1)
-		{
-			if (ls->info[0] == 1)
-			{
-				ft_putstr(ls->select);
-				ft_putchar(' ');
-			}
-			ls = ls->next;
-		}
-		if (ls->info[0] == 1)
-			ft_putstr(ls->select);
-		exit(0);
-	}
+		enter_tch(ls);
 	else if (buf[0] == 32 && buf[1] == 0 & buf[2] == 0)
 	{
 		tmp->info[0] = (tmp->info[0] == 0) ? 1 : 0;
 		tmp->next->info[3] = 1;
 	}
 	else if (buf[0] == 27 && buf[1] == 0 & buf[2] == 0)
-	{
-		tmp->info[3] = 1;
-		tputs(tgetstr("cl", NULL), 1, ft_put);
-		tputs(tgetstr("ve", NULL), 1, ft_put);
-		exit(0);
-	}
+		s_ctrl_c(0);
 	else
 		tmp->info[3] = 1;
 	return (ls);

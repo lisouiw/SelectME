@@ -6,22 +6,21 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/09 17:36:10 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 15:08:24 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
 
-
 ///0f03ad8568
-/* *
- * info[0] = video
- * info[1] = debut
- * info[2] = end
- * info[3] = cursor
- * info[4] = pos colonne;
- * info[5] = pos line;
- * */
+/*
+info[0] = video
+info[1] = debut
+info[2] = end
+info[3] = cursor
+info[4] = pos colonne;
+info[5] = pos line;
+*/
 
 t_lst	*create_ls(void)
 {
@@ -65,7 +64,6 @@ t_lst	*add_ls(char *str, t_lst *nw, t_lst *ls)
 		return (ls);
 	}
 }
-
 
 t_num	*alloue_num(t_num *nb, int max)
 {
