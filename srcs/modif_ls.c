@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/09 19:31:46 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 12:12:15 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,16 +114,36 @@ t_lst	*modif_ls(t_lst *ls, char *buf)
 		move_me(tmp, buf[2], tmp->info[5]);
 	else if (buf[0] == 127 && buf[1] == 0 & buf[2] == 0)
 		del_ls(&tmp);
-//	else if (buf[0] == 10 && buf[1] == 0 & buf[2] == 0)
+	else if (buf[0] == 10 && buf[1] == 0 & buf[2] == 0)
+	{
+		tputs(tgetstr("cl", NULL), 1, ft_put);
+		tputs(tgetstr("ve", NULL), 1, ft_put);
+		while (ls->info[2] != 1)
+		{
+			if (ls->info[0] == 1)
+			{
+				ft_putstr(ls->select);
+				ft_putchar(' ');
+			}
+			ls = ls->next;
+		}
+		if (ls->info[0] == 1)
+			ft_putstr(ls->select);
+		exit(0);
+	}
 	else if (buf[0] == 32 && buf[1] == 0 & buf[2] == 0)
 	{
 		tmp->info[0] = (tmp->info[0] == 0) ? 1 : 0;
 		tmp->next->info[3] = 1;
 	}
-	else
+	else if (buf[0] == 27 && buf[1] == 0 & buf[2] == 0)
 	{
 		tmp->info[3] = 1;
+		tputs(tgetstr("cl", NULL), 1, ft_put);
+		tputs(tgetstr("ve", NULL), 1, ft_put);
 		exit(0);
-		}
+	}
+	else
+		tmp->info[3] = 1;
 	return (ls);
 }
