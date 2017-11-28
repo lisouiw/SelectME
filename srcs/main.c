@@ -40,12 +40,13 @@ int		set_up_term(void)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);
-	term.c_lflag |= (ECHONL);
+//	term.c_lflag |= (ECHONL);
+	//IGNBRK
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
 	term.c_cc[VMIN] = 1;
 	term.c_cc[VTIME] = 0;
-	term.c_lflag &= ~(ECHOCTL);
+//	term.c_lflag &= ~(ECHOCTL);
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		return (-1);
 	return (1);
@@ -63,8 +64,6 @@ t_lst    *voir_touche(t_lst *ls, t_num *nb)
 	ls_signal();
 	if (read(0, buf, 3) && check(0, &nb, &ls) == 1)
 	{
-	//	printf("%i %i %i", buf[0], buf[1], buf[2]);
-	//	exit(0);
 		ls = modif_ls(ls, buf);
 	}
 	return (ls);

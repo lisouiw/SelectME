@@ -47,6 +47,7 @@ void	s_ctrl_c(int sig)
 {
 	sig = 0;
 	tputs(tgetstr("ve", NULL), 1, ft_put);
+	tputs(tgetstr("cl", NULL), 1, ft_put);
 	init();
 	exit(EXIT_SUCCESS);
 }
@@ -55,6 +56,7 @@ void	ls_signal(void)
 {
 	signal(SIGTSTP, s_ctrl_z);
 	signal(SIGCONT, s_continu);
+	signal(SIGQUIT, s_ctrl_c);
 	signal(SIGWINCH, s_win);
 	signal(SIGINT, s_ctrl_c);
 }
@@ -80,7 +82,11 @@ void	del_ls(t_lst **ls)
 
 	tmp = &(*ls);
 	if ((*ls)->info[1] == 1 && (*ls)->info[2] == 1)
+	{
+		tputs(tgetstr("cl", NULL), 1, ft_put);
+		tputs(tgetstr("ve", NULL), 1, ft_put);
 		exit(0);
+	}
 	else if ((*ls)->info[1] == 1)
 		(*ls)->next->info[1] = 1;
 	else if ((*ls)->info[2] == 1)
@@ -115,6 +121,9 @@ t_lst	*modif_ls(t_lst *ls, char *buf)
 		tmp->next->info[3] = 1;
 	}
 	else
+	{
 		tmp->info[3] = 1;
+		exit(0);
+		}
 	return (ls);
 }
