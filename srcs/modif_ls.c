@@ -102,19 +102,28 @@ void	del_ls(t_lst **ls)
 
 void	enter_tch(t_lst *ls)
 {
+	int		i;
+
+	i = 0;
 	tputs(tgetstr("ve", NULL), 1, ft_put);
 	tputs(tgetstr("te", NULL), 1, ft_put);
 	while (ls->info[2] != 1)
 	{
 		if (ls->info[0] == 1)
 		{
+			++i;
+			i > 1 ? ft_putchar_fd(' ', 1) : 0;
 			ft_putstr_fd(ls->select, 1);
-			ft_putchar_fd(' ', 1);
 		}
 		ls = ls->next;
 	}
 	if (ls->info[0] == 1)
-		ft_putstr(ls->select);
+	{
+		++i;
+		i > 1 ? ft_putchar_fd(' ', 1) : 0;
+		ft_putstr_fd(ls->select, 1);
+	}
+	i > 0 ? ft_putchar_fd('\n', 1) : 0;
 	init();
 	exit(0);
 }
