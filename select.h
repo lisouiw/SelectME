@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:05:38 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 17:05:56 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:29:18 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 # include "libft/libft.h"
 # include <curses.h>
-# include <errno.h>
-# include <stdio.h>
 # include <sys/ioctl.h>
 # include <termios.h>
 # include <term.h>
@@ -51,33 +49,30 @@ t_num	*g_nb;
 t_lst	*g_ls;
 struct termios		term;
 
-//main
 int					set_up_term(void);
 int					init(void);
 t_lst				*voir_touche(t_lst *ls, t_num *nb);
 void				boucle(t_lst *ls, t_num *nb);
 
-//ls
 t_lst				*add_ls(char *str, t_lst *nw, t_lst *ls);
 t_lst				*giv_ls(char **ag, t_lst *ls, t_num **nb);
 t_num				*alloue_num(t_num *nb, int max);
 t_lst				*create_ls(void);
 void				init_ls(t_lst **ls, t_num **nb);
 
-//signal
 void				s_win(int sig);
 void				s_continu(int sig);
 void				s_ctrl_z(int sig);
 void				s_ctrl_c(int sig);
 void				ls_signal(void);
 
-//exec_key
 void				move_me(t_lst *lst, int i, int li);
 void				del_ls(t_lst **ls);
 t_lst				*modif_ls(t_lst *ls, char *buf, t_lst *tmp);
+void				free_pls(void);
 
-//tools
 int					ft_put(int c);
+void				my_tputs(t_lst **ls, t_get g);
 t_get				give_g(void);
 void				my_list(t_lst **ls, t_num **nb, int x, t_get g);
 int					check(int x, t_num **nb, t_lst **lst);

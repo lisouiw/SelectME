@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 16:58:04 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:29:50 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	s_ctrl_c(int sig)
 	tputs(tgetstr("ve", NULL), 0, ft_put);
 	tputs(tgetstr("te", NULL), 0, ft_put);
 	init();
+	free_pls();
 	exit(EXIT_SUCCESS);
 }
 

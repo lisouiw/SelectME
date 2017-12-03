@@ -6,11 +6,27 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 17:05:44 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:28:19 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
+
+void	free_pls(void)
+{
+	t_lst	*tmp;
+
+	free(g_nb);
+	while (g_ls->info[1		] != 1)
+		g_ls = g_ls->next;
+	while (g_ls->info[1] != 1 && g_ls->info[2] != 1)
+	{
+		tmp = g_ls->next;
+		g_ls->next->info[1] = 1;
+		free(g_ls->select);
+		free(g_ls);
+	}
+}
 
 void	move_me(t_lst *ls, int i, int li)
 {
@@ -37,6 +53,8 @@ void	del_ls(t_lst **ls)
 		tputs(tgetstr("ve", NULL), 0, ft_put);
 		tputs(tgetstr("te", NULL), 0, ft_put);
 		init();
+		free((*ls)->select);
+		free(*ls);
 		exit(EXIT_SUCCESS);
 	}
 	else if ((*ls)->info[1] == 1)
@@ -75,6 +93,7 @@ void	enter_tch(t_lst *ls)
 	}
 	i > 0 ? ft_putchar_fd('\n', 1) : 0;
 	init();
+	free_pls();
 	exit(0);
 }
 
