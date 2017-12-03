@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 17:28:19 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:40:35 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_lst	*modif_ls(t_lst *ls, char *buf, t_lst *tmp)
 		tmp->prev->info[3] = 1;
 	else if (buf[0] == 27 && buf[1] == 91 && (buf[2] == 67 || buf[2] == 68))
 		move_me(tmp, buf[2], tmp->info[5]);
-	else if (buf[0] == 127 && buf[1] == 0 & buf[2] == 0)
+	else if ((buf[0] == 127 && buf[1] == 0 & buf[2] == 0) || (buf[0] == 27 && buf[1] == 91 & buf[2] == 51))
 		del_ls(&tmp);
 	else if (buf[0] == 10 && buf[1] == 0 & buf[2] == 0)
 		enter_tch(ls);
