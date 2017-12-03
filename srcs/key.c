@@ -6,75 +6,25 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 17:59:38 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 14:25:17 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
-
-void	s_win(int sig)
-{
-	struct ttysize ts;
-
-	sig = 0;
-	if (tcsetattr(0, TCSANOW, &term) == -1)
-		exit(0);
-	ioctl(1, TIOCGSIZE, &ts);
-	g_nb->tb[0] = ts.ts_cols;
-	g_nb->tb[1] = ts.ts_lines;
-	my_list(&g_ls, &g_nb, 0, give_g());
-}
-
-void	s_continu(int sig)
-{
-	if (tcsetattr(0, TCSANOW, &term) == -1)
-		exit(0);
-	s_win(0);
-	sig = 0;
-}
-
-void	s_ctrl_z(int sig)
-{
-	sig = 0;
-	init();
-	signal(SIGTSTP, SIG_DFL);
-	ioctl(0, TIOCSTI, "\032");
-	tputs(tgetstr("cl", NULL), 0, ft_put);
-	tputs(tgetstr("ve", NULL), 0, ft_put);
-	tputs(tgetstr("te", NULL), 0, ft_put);
-}
-
-void	s_ctrl_c(int sig)
-{
-	sig = 0;
-	tputs(tgetstr("ve", NULL), 0, ft_put);
-	tputs(tgetstr("te", NULL), 0, ft_put);
-	init();
-	exit(EXIT_SUCCESS);
-}
-
-void	ls_signal(void)
-{
-	signal(SIGTSTP, s_ctrl_z);
-	signal(SIGCONT, s_continu);
-	signal(SIGQUIT, s_ctrl_c);
-	signal(SIGWINCH, s_win);
-	signal(SIGINT, s_ctrl_c);
-}
 
 void	move_me(t_lst *ls, int i, int li)
 {
 	if (i == 68 && (ls = ls->prev))
 	{
 		while (ls->info[5] != li)
-			ls = (*ls).prev;
+			ls = ls->prev;
 	}
 	else if (i == 67 && (ls = ls->next))
 	{
 		while (ls->info[5] != li)
-			ls = (*ls).next;
+			ls = ls->next;
 	}
-	(*ls).info[3] = 1;
+	ls->info[3] = 1;
 }
 
 void	del_ls(t_lst **ls)
@@ -86,6 +36,8 @@ void	del_ls(t_lst **ls)
 	{
 		tputs(tgetstr("ve", NULL), 0, ft_put);
 		tputs(tgetstr("te", NULL), 0, ft_put);
+		free((*ls)->select);
+		free(*ls);
 		init();
 		exit(EXIT_SUCCESS);
 	}
@@ -124,14 +76,13 @@ void	enter_tch(t_lst *ls)
 		ft_putstr_fd(ls->select, 1);
 	}
 	i > 0 ? ft_putchar_fd('\n', 1) : 0;
+	free_pls();
 	init();
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
-t_lst	*modif_ls(t_lst *ls, char *buf)
+t_lst	*exec_key(t_lst *ls, char *buf, t_lst *tmp)
 {
-	t_lst	*tmp;
-
 	tmp = ls;
 	while ((*tmp).info[3] != 1)
 		tmp = tmp->next;

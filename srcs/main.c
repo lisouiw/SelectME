@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 17:58:52 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 14:37:56 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,34 +60,8 @@ t_lst	*voir_touche(t_lst *ls, t_num *nb)
 	buf[2] = 0;
 	ls_signal();
 	if (read(0, buf, 3) && check(0, &nb, &ls) == 1)
-		ls = modif_ls(ls, buf);
+		ls = exec_key(ls, buf, NULL);
 	return (ls);
-}
-
-void	init_ls(t_lst **ls, t_num **nb)
-{
-	int		i;
-	int		x;
-
-	x = 0;
-	if ((*ls)->next->info[1] == 1)
-		*ls = (*ls)->next;
-	while ((*ls)->info[1] != 1)
-		*ls = (*ls)->next;
-	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
-	{
-		i = 0;
-		while (i < (*nb)->tb[1])
-		{
-			(*ls)->info[4] = x;
-			(*ls)->info[5] = i;
-			*ls = (*ls)->next;
-			if ((*ls)->info[1] == 1)
-				return ;
-			++i;
-		}
-		x = x + (*nb)->max;
-	}
 }
 
 void	boucle(t_lst *ls, t_num *nb)

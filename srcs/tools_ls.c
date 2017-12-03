@@ -6,32 +6,13 @@
 /*   By: ltran <ltran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:06:10 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 14:36:27 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 14:38:20 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
 
-int		ft_put(int c)
-{
-	write(1, &c, 1);
-	return (1);
-}
-
-t_get	give_g(void)
-{
-	t_get	get;
-
-	get.cm = tgetstr("cm", NULL);
-	get.us = tgetstr("us", NULL);
-	get.ue = tgetstr("ue", NULL);
-	get.so = tgetstr("so", NULL);
-	get.se = tgetstr("se", NULL);
-	tputs(tgetstr("cl", NULL), 1, ft_put);
-	return (get);
-}
-
-int		check(int x, t_num **nb, t_lst **ls)
+void	my_list(t_lst **ls, t_num **nb, int x, t_get g)
 {
 	int		i;
 
@@ -41,26 +22,59 @@ int		check(int x, t_num **nb, t_lst **ls)
 		*ls = (*ls)->next;
 	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
 	{
+		i = -1;
+		while (++i < (*nb)->tb[1])
+		{
+			tputs(tgoto(g.cm, x, i), 0, ft_put);
+			(*ls)->info[4] = x;
+			(*ls)->info[5] = i;
+			my_tputs(ls, g);
+			*ls = (*ls)->next;
+			if ((*ls)->info[1] == 1)
+				return ;
+		}
+		x = x + (*nb)->max;
+	}
+}
+
+void	free_pls(void)
+{
+	t_lst	*tmp;
+
+	free(g_nb);
+	while (g_ls->info[1] != 1)
+		g_ls = g_ls->next;
+	while (g_ls->info[1] != 1 && g_ls->info[2] != 1)
+	{
+		tmp = g_ls->next;
+		g_ls->next->info[1] = 1;
+		free(g_ls->select);
+		free(g_ls);
+	}
+}
+
+void	init_ls(t_lst **ls, t_num **nb)
+{
+	int		i;
+	int		x;
+
+	x = 0;
+	if ((*ls)->next->info[1] == 1)
+		*ls = (*ls)->next;
+	while ((*ls)->info[1] != 1)
+		*ls = (*ls)->next;
+	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
+	{
 		i = 0;
 		while (i < (*nb)->tb[1])
 		{
+			(*ls)->info[4] = x;
+			(*ls)->info[5] = i;
 			*ls = (*ls)->next;
 			if ((*ls)->info[1] == 1)
-				return (1);
+				return ;
 			++i;
 		}
 		x = x + (*nb)->max;
 	}
-	return (0);
-}
-
-void	my_tputs(t_lst **ls, t_get g)
-{
-	if ((*ls)->info[0] == 1)
-		tputs(g.so, 0, ft_put);
-	if ((*ls)->info[3] == 1)
-		tputs(g.us, 0, ft_put);
-	tputs((*ls)->select, 0, ft_put);
-	tputs(g.ue, 0, ft_put);
-	tputs(g.se, 0, ft_put);
 }

@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/11/28 17:54:06 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 11:41:08 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ t_num	*alloue_num(t_num *nb, int max)
 {
 	struct ttysize ts;
 
-	nb = (t_num*)malloc(sizeof(t_num));
+	if (!(nb = (t_num*)malloc(sizeof(t_num))))
+		return (NULL);
 	nb->max = max + 2;
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		exit(0);
