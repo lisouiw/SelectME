@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 14:25:17 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:05:44 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,14 @@ void	move_me(t_lst *ls, int i, int li)
 	if (i == 68 && (ls = ls->prev))
 	{
 		while (ls->info[5] != li)
-			ls = ls->prev;
+			ls = (*ls).prev;
 	}
 	else if (i == 67 && (ls = ls->next))
 	{
 		while (ls->info[5] != li)
-			ls = ls->next;
+			ls = (*ls).next;
 	}
-	ls->info[3] = 1;
+	(*ls).info[3] = 1;
 }
 
 void	del_ls(t_lst **ls)
@@ -36,8 +36,6 @@ void	del_ls(t_lst **ls)
 	{
 		tputs(tgetstr("ve", NULL), 0, ft_put);
 		tputs(tgetstr("te", NULL), 0, ft_put);
-		free((*ls)->select);
-		free(*ls);
 		init();
 		exit(EXIT_SUCCESS);
 	}
@@ -76,12 +74,11 @@ void	enter_tch(t_lst *ls)
 		ft_putstr_fd(ls->select, 1);
 	}
 	i > 0 ? ft_putchar_fd('\n', 1) : 0;
-	free_pls();
 	init();
-	exit(EXIT_SUCCESS);
+	exit(0);
 }
 
-t_lst	*exec_key(t_lst *ls, char *buf, t_lst *tmp)
+t_lst	*modif_ls(t_lst *ls, char *buf, t_lst *tmp)
 {
 	tmp = ls;
 	while ((*tmp).info[3] != 1)

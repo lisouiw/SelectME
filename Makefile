@@ -6,7 +6,7 @@
 #    By: ltran <marvin@42.fr>                       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/09/08 12:54:08 by ltran             #+#    #+#              #
-#    Updated: 2017/12/03 14:39:10 by ltran            ###   ########.fr        #
+#    Updated: 2017/12/03 17:00:08 by ltran            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRCDIR = srcs
 
 FLAGS = -Wall -Wextra -Werror
 
-SRCS = main.c ls.c key.c tools.c tools_ls.c signals.c
+SRCS = main.c ls.c exec_key.c tools.c signal.c
 
 SRC_N = $(addprefix $(SRCDIR)/, $(SRCS))
 

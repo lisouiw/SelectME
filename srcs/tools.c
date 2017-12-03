@@ -6,7 +6,7 @@
 /*   By: ltran <ltran@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:06:10 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 14:36:27 by ltran            ###   ########.fr       */
+/*   Updated: 2017/11/28 18:01:40 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int		ft_put(int c)
 {
-	write(1, &c, 1);
+	write(0, &c, 1);
 	return (1);
 }
 
@@ -63,4 +63,29 @@ void	my_tputs(t_lst **ls, t_get g)
 	tputs((*ls)->select, 0, ft_put);
 	tputs(g.ue, 0, ft_put);
 	tputs(g.se, 0, ft_put);
+}
+
+void	my_list(t_lst **ls, t_num **nb, int x, t_get g)
+{
+	int		i;
+
+	if ((*ls)->next->info[1] == 1)
+		*ls = (*ls)->next;
+	while ((*ls)->info[1] != 1)
+		*ls = (*ls)->next;
+	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
+	{
+		i = -1;
+		while (++i < (*nb)->tb[1])
+		{
+			tputs(tgoto(g.cm, x, i), 0, ft_put);
+			(*ls)->info[4] = x;
+			(*ls)->info[5] = i;
+			my_tputs(ls, g);
+			*ls = (*ls)->next;
+			if ((*ls)->info[1] == 1)
+				return ;
+		}
+		x = x + (*nb)->max;
+	}
 }

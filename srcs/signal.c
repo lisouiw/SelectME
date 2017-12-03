@@ -6,7 +6,7 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/10/30 11:03:28 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 14:22:05 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 16:58:04 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ void	s_win(int sig)
 void	s_continu(int sig)
 {
 	if (tcsetattr(0, TCSANOW, &term) == -1)
-		exit(EXIT_SUCCESS);
-	tputs(tgetstr("vi", NULL), 0, ft_put);
-	tputs(tgetstr("ti", NULL), 0, ft_put);
+		exit(0);
 	s_win(0);
 	sig = 0;
 }
@@ -41,6 +39,7 @@ void	s_ctrl_z(int sig)
 	init();
 	signal(SIGTSTP, SIG_DFL);
 	ioctl(0, TIOCSTI, "\032");
+	tputs(tgetstr("cl", NULL), 0, ft_put);
 	tputs(tgetstr("ve", NULL), 0, ft_put);
 	tputs(tgetstr("te", NULL), 0, ft_put);
 }
@@ -50,7 +49,6 @@ void	s_ctrl_c(int sig)
 	sig = 0;
 	tputs(tgetstr("ve", NULL), 0, ft_put);
 	tputs(tgetstr("te", NULL), 0, ft_put);
-	free_pls();
 	init();
 	exit(EXIT_SUCCESS);
 }

@@ -6,11 +6,37 @@
 /*   By: ltran <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/28 17:49:29 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 11:41:08 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:04:43 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../select.h"
+
+void	init_ls(t_lst **ls, t_num **nb)
+{
+	int		i;
+	int		x;
+
+	x = 0;
+	if ((*ls)->next->info[1] == 1)
+		*ls = (*ls)->next;
+	while ((*ls)->info[1] != 1)
+		*ls = (*ls)->next;
+	while (x + (*nb)->max - 2 <= (*nb)->tb[0])
+	{
+		i = 0;
+		while (i < (*nb)->tb[1])
+		{
+			(*ls)->info[4] = x;
+			(*ls)->info[5] = i;
+			*ls = (*ls)->next;
+			if ((*ls)->info[1] == 1)
+				return ;
+			++i;
+		}
+		x = x + (*nb)->max;
+	}
+}
 
 t_lst	*create_ls(void)
 {
@@ -59,8 +85,7 @@ t_num	*alloue_num(t_num *nb, int max)
 {
 	struct ttysize ts;
 
-	if (!(nb = (t_num*)malloc(sizeof(t_num))))
-		return (NULL);
+	nb = (t_num*)malloc(sizeof(t_num));
 	nb->max = max + 2;
 	if (tcsetattr(0, TCSANOW, &term) == -1)
 		exit(0);

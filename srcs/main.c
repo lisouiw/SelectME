@@ -6,7 +6,7 @@
 /*   By: gostimacbook <gostimacbook@student.42.fr>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/08 13:08:49 by ltran             #+#    #+#             */
-/*   Updated: 2017/12/03 14:37:56 by ltran            ###   ########.fr       */
+/*   Updated: 2017/12/03 17:06:11 by ltran            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_lst	*voir_touche(t_lst *ls, t_num *nb)
 	buf[2] = 0;
 	ls_signal();
 	if (read(0, buf, 3) && check(0, &nb, &ls) == 1)
-		ls = exec_key(ls, buf, NULL);
+		ls = modif_ls(ls, buf, NULL);
 	return (ls);
 }
 
