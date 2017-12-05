@@ -76,13 +76,12 @@ void	boucle(t_lst *ls, t_num *nb)
 
 int		main(int ac, char **ag)
 {
-	if (getenv("TERM") == NULL || ac == 1)
+	if (getenv("TERM") == NULL || ac == 1 || set_up_term())
 	{
 		ft_putendl_fd((ac == 1 ? "No arguments" : "Can't identify the terminal")
 				, 1);
 		exit(0);
 	}
-	set_up_term();
 	tputs(tgetstr("vi", NULL), 0, ft_put);
 	tputs(tgetstr("ti", NULL), 0, ft_put);
 	g_ls = NULL;
